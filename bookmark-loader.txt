@@ -1,0 +1,1 @@
+javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/TEN_GITHUB/TEN_REPO@main/motion-virtual-cam.min.js';s.onerror=function(){alert('Khong tai duoc script: sai link hoac trang chan')};(document.head||document.documentElement).appendChild(s)})()
