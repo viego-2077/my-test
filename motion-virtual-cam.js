@@ -131,18 +131,44 @@
   // ---------- UI (Shadow DOM) ----------
   const host = document.createElement('div');
   host.id = 'vcam2-host';
+  
+  // CÔ LẬP TUYỆT ĐỐI THẺ HOST: Ép mọi thuộc tính về mặc định để chống CSS từ trang web đè lên
+  host.style.setProperty('all', 'initial', 'important');
+  host.style.setProperty('display', 'block', 'important');
+  host.style.setProperty('position', 'fixed', 'important');
+  host.style.setProperty('top', '0', 'important');
+  host.style.setProperty('left', '0', 'important');
+  host.style.setProperty('width', '0', 'important');
+  host.style.setProperty('height', '0', 'important');
+  host.style.setProperty('z-index', '2147483647', 'important');
+  host.style.setProperty('pointer-events', 'none', 'important');
+
   document.body.appendChild(host);
   const shadow = host.attachShadow({ mode: 'open' });
 
   const tpl = `
   <style>
-    :host{all:initial}
-    #vcam2,#vcam2 *{box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+    :host {
+      all: initial !important;
+      display: block !important;
+    }
+    /* Ép cứng lại màu nền và màu chữ cho toàn bộ panel để chống kế thừa từ host */
+    #vcam2, #vcam2 * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #e7ecf5;
+    }
     #vcam2{--bg:#0d0f18;--card:#151826;--line:#222840;--mut:#7d8aa3;--ac:#00ffcc;
-      position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;width:min(236px,calc(100vw - 24px));background:var(--bg);color:#e7ecf5;border-radius:14px;
-      border:1px solid var(--line);box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 0 1px rgba(0,255,204,.06);
+      position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;width:min(236px,calc(100vw - 24px));
+      background: var(--bg) !important; 
+      color: #e7ecf5 !important;
+      border-radius:14px;border:1px solid var(--line);
+      box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 0 1px rgba(0,255,204,.06);
       z-index:2147483647;user-select:none;overflow:hidden;transition:opacity .15s;
-      line-height:1.4;font-size:12px;text-align:left;letter-spacing:normal;text-transform:none}
+      line-height:1.4;font-size:12px;text-align:left;letter-spacing:normal;text-transform:none;
+      margin: 0 !important; 
+      padding: 0 !important;
+    }
     #vcam2 .h{touch-action:none;display:flex;align-items:center;gap:8px;padding:9px 11px;cursor:move;font-weight:700;font-size:12px;letter-spacing:.3px}
     #vcam2 .h .dot{width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac)}
     #vcam2 .h .t{flex:1}
@@ -159,7 +185,7 @@
     #vcam2 .seg{position:relative;display:grid;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
     #vcam2 .seg i{position:absolute;top:3px;bottom:3px;left:3px;border-radius:7px;background:var(--ac);transition:transform .2s ease}
     #vcam2 .seg button{position:relative;z-index:1;border:0;background:transparent;color:var(--mut);font-size:11px;font-weight:600;padding:5px 0;cursor:pointer;transition:color .2s;line-height:1.2;margin:0}
-    #vcam2 .seg button.on{color:#06231c}
+    #vcam2 .seg button.on{color:#06231c !important}
     #vcam2 .m2{grid-template-columns:1fr 1fr}#vcam2 .m2 i{width:calc(50% - 3px)}
     #vcam2 .m3{grid-template-columns:repeat(3,1fr)}#vcam2 .m3 i{width:calc(33.333% - 2px)}
     #vcam2 .lb{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
@@ -180,7 +206,7 @@
     #vcam2 .ft{font-size:10px;text-align:center;color:#56617a}
     #vcam2 .frz{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ac);border-radius:10px;font-size:11px;font-weight:600;padding:8px 0;cursor:pointer;transition:all .15s;line-height:1.2;margin:0}
     #vcam2 .frz:hover{border-color:var(--ac)}
-    #vcam2 .frz.on{background:var(--ac);color:#06231c;border-color:var(--ac)}
+    #vcam2 .frz.on{background:var(--ac);color:#06231c !important;border-color:var(--ac)}
     @media (pointer:coarse){
       #vcam2{width:min(300px,calc(100vw - 24px))}
       #vcam2 .h{font-size:14px;padding:12px}
