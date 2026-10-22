@@ -128,17 +128,16 @@
   // ---------- UI SHADOW DOM ISOLATION ----------
   const host = document.createElement('div');
   host.id = 'vcam2-host';
-  host.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;z-index:2147483647;';
+  host.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;z-index:2147483647;direction:ltr;text-align:left;font-size:16px;';
   document.body.appendChild(host);
 
   const shadow = host.attachShadow({ mode: 'open' });
 
-  // CSS đã được làm gọn và loại bỏ @media (pointer:coarse)
   const tpl = `
   <style>
     :host, *, *::before, *::after {
       all: initial;
-      box-sizing: border-box;
+      box-sizing: border-box !important;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       line-height: normal;
     }
@@ -149,6 +148,7 @@
       border:1px solid var(--line);box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 0 1px rgba(0,255,204,.06);
       user-select:none;overflow:hidden;transition:opacity .15s;
       display: block;
+      direction:ltr;text-align:left;
     }
     #vcam2 div, #vcam2 span, #vcam2 button, #vcam2 input, #vcam2 b, #vcam2 small, #vcam2 a, #vcam2 video {
       display: block;
@@ -157,7 +157,8 @@
     #vcam2 .h .dot { width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac);flex:none; }
     #vcam2 .h .t { flex:1; display:flex; align-items:baseline; }
     #vcam2 .h .t small { color:var(--mut);font-weight:500;margin-left:4px;display:inline; }
-    #vcam2 .ib { width:22px;height:22px;border-radius:7px;border:0;background:transparent;color:var(--mut);cursor:pointer;font-size:15px;line-height:1;text-align:center;padding:0; }
+    #vcam2 .ib { width:22px;height:22px;border-radius:7px;border:0;background:transparent;color:var(--mut);cursor:pointer;font-size:15px;line-height:1;padding:0;
+      display:flex !important;align-items:center;justify-content:center;text-align:center !important; }
     #vcam2 .ib.tx { width:auto;padding:0 8px;font-size:10px;font-weight:600;line-height:22px; }
     #vcam2 .ib:hover { background:var(--card);color:#fff; }
     #vcam2 .b { padding:0 11px 10px;display:flex;flex-direction:column;gap:8px; }
@@ -168,7 +169,8 @@
     #vcam2 .hint { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--mut);background:#000;pointer-events:none;text-align:center; }
     #vcam2 .seg { position:relative;display:grid;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px; }
     #vcam2 .seg i { position:absolute;top:3px;bottom:3px;left:3px;border-radius:7px;background:var(--ac);transition:transform .2s ease; }
-    #vcam2 .seg button { position:relative;z-index:1;border:0;background:transparent;color:var(--mut);font-size:11px;font-weight:600;padding:5px 0;cursor:pointer;transition:color .2s;text-align:center; }
+    #vcam2 .seg button { position:relative;z-index:1;border:0;background:transparent;color:var(--mut);font-size:11px;font-weight:600;padding:5px 0;cursor:pointer;transition:color .2s;
+      display:flex !important;align-items:center;justify-content:center;text-align:center !important;width:100%;min-width:0; }
     #vcam2 .seg button.on { color:#06231c; }
     #vcam2 .m2 { grid-template-columns:1fr 1fr; } #vcam2 .m2 i { width:calc(50% - 3px); }
     #vcam2 .m3 { grid-template-columns:repeat(3,1fr); } #vcam2 .m3 i { width:calc(33.333% - 2px); }
@@ -186,7 +188,8 @@
     #vcam2 .file .mt span { font-size:10px;color:var(--mut); }
     #vcam2 .file .chg { border:1px solid var(--line);background:var(--bg);color:var(--ac);border-radius:8px;font-size:10px;font-weight:600;padding:4px 8px;cursor:pointer; }
     #vcam2 input[type=range] { width:100%;accent-color:var(--ac);cursor:pointer;margin:0;display:block;appearance:auto; -webkit-appearance: slider-horizontal; }
-    #vcam2 .frz { width:100%;border:1px solid var(--line);background:var(--card);color:var(--ac);border-radius:10px;font-size:11px;font-weight:600;padding:8px 0;cursor:pointer;transition:all .15s;text-align:center; }
+    #vcam2 .frz { width:100%;border:1px solid var(--line);background:var(--card);color:var(--ac);border-radius:10px;font-size:11px;font-weight:600;padding:8px 0;cursor:pointer;transition:all .15s;
+      display:flex !important;align-items:center;justify-content:center;text-align:center !important; }
     #vcam2 .frz:hover { border-color:var(--ac); }
     #vcam2 .frz.on { background:var(--ac);color:#06231c;border-color:var(--ac); }
     #vcam2 .cr { font-size:10px;text-align:center;color:var(--mut);border-top:1px solid var(--line);padding-top:7px; }
@@ -230,7 +233,7 @@
   [...doc.head.childNodes, ...doc.body.childNodes].forEach((n) => shadow.appendChild(document.importNode(n, true)));
 
   const $ = (id) => shadow.querySelector('#' + id);
-  const box = $('vcam2'), prev =$('v-prev');
+  const box = $('vcam2'), prev = $('v-prev');
   prev.muted = true;
   prev.srcObject = new MediaStream([out.getVideoTracks()[0].clone()]);
   prev.play().catch(() => {});
@@ -240,8 +243,8 @@
     const btns = [...$('v-mode').querySelectorAll('button')];
     btns.forEach((b) => b.classList.toggle('on', b.dataset.m === S.mode));
     place($('v-mode'), S.mode === 'real' ? 0 : 1);
-    $('v-sec').style.display = S.mode === 'real' ? 'none' : 'flex';$('v-rsec').style.display = S.mode === 'real' ? 'block' : 'none';
-    $('v-freeze').classList.toggle('on', !!frozen);$('v-freeze').textContent = frozen ? 'Tiếp tục (bỏ đóng băng)' : 'Đóng băng khung hình';
+    $('v-sec').style.display = S.mode === 'real' ? 'none' : 'flex'; $('v-rsec').style.display = S.mode === 'real' ? 'block' : 'none';
+    $('v-freeze').classList.toggle('on', !!frozen); $('v-freeze').textContent = frozen ? 'Tiếp tục (bỏ đóng băng)' : 'Đóng băng khung hình';
     $('v-live').textContent = frozen && S.mode === 'real' ? 'ĐÓNG BĂNG' : 'LIVE';
     $('v-hint').style.display = (S.mode === 'real' || hasMedia) ? 'none' : 'flex';
     const fb = [...$('v-fps').querySelectorAll('button')];
@@ -306,10 +309,10 @@
     scheduleRelease();
     $('v-name').textContent = f.name;
     $('v-meta').textContent = (isGif ? 'GIF' : isImg ? 'Ảnh' : 'Video') + ' · ' + fmt(f.size);
-    $('v-empty').style.display = 'none';$('v-fileinfo').style.display = 'flex';
+    $('v-empty').style.display = 'none'; $('v-fileinfo').style.display = 'flex';
     syncUI();
   }
-  const drop = $('v-drop'), fileInp =$('v-file');
+  const drop = $('v-drop'), fileInp = $('v-file');
   drop.addEventListener('click', () => fileInp.click());
   fileInp.addEventListener('click', (e) => e.stopPropagation());
   fileInp.addEventListener('change', (e) => { loadFile(e.target.files[0]); fileInp.value = ''; });
